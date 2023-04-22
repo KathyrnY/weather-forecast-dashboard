@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="./assests/style.css">
 </head>
 <body>
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
+    <nav class="navbar bg-body-tertiary align-items-center">
+        <div class="container-fluid align-items-center">
           <span class="text-center navbar-brand mb h1 align-items-center">Weather Dashboard</span>
         </div>
       </nav>
@@ -28,12 +28,13 @@
               </aside>
 
               <!-- City Display Info -->
-              <section class="col-9 display-blocks">
+              <section class="col-9">
+                <h2 class="city-name">City Info</h2>
                 <div id="city-display-info"class="cityInfo">
                     <div id="current-display-info" class="currentWeatherInfo"></div>
                 </div>
                 <!-- Five Day Forecast blocks -->
-                <div class="forcastDisplay">
+                <div class="forecastDisplay">
                     <h2>Five Day Forecast</h2>
                     <div id="forecast-blocks" class="forecastBoxes"></div>
                 </div>

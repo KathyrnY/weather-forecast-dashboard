@@ -1,0 +1,60 @@
+body {
+    font-size: 16px;
+    margin: 0;
+    text-align: center;
+}
+
+span .h1 {
+    text-align: center;
+}
+
+.container {
+display: flex;
+flex-wrap: wrap;
+
+}
+
+input {
+    margin-top: 1rem;
+
+}
+
+input::placeholder {
+    text-align: center;
+}
+
+button {
+    margin-top: 1rem;
+}
+ button .btn-primary {
+    text-align: center;
+ }
+ .input-column {
+    text-align: center;
+ }
+
+ #past-results {
+    text-align: center;
+    margin-top: 2rem;
+ }
+
+ section {
+    position: relative;
+    bottom: 4rem;
+    left: 2rem;
+ }
+.col-9 {
+    width: 100%;
+    text-align: center;
+}
+
+.city-name {
+    position: relative;
+    bottom: 10rem;
+}
+
+.forecastDisplay {
+    position: relative;
+    bottom: 1rem;
+    left: 15px;
+}

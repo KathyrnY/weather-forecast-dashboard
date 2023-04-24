@@ -1,7 +1,9 @@
 var APIKey = "b8a758dfd137c5b5b06017d7a3604538";
 var callWeatherUrl= "https://api.openweathermap.org/data/2.5/onecall?";
 var callGeoWeatherUrl = "http://api.openweathermap.org/geo/1.0/direct?qu";
-var city = "";
+// var city = "";
+var containerEL = document.querySelector(".container")
+containerEL.classList.add("row");
 var enterCity = document.querySelector("#searchCity");
 var searchBtn = document.querySelector("#searchButton");
 var cityDisplayEL = document.querySelector("#city-display-info");
@@ -14,34 +16,67 @@ var forecastEL = document.querySelector("#forecast-blocks");
 //     console.log(cityArray)
 // }
 // Array to use in local storage
-var showHistory = [];
+var showHistory = enterCity.value;
 
 // adding event listener to local storage button
-var cityButton = function() {
+// var cityButton = function() {
 var city = localStorage.getItem("city")
     if (city) {
         showHistory = JSON.parse(city);
         console.log(showHistory);
         searchBtn.innerHTML = '';
-        for (var i = 0; i < showHistory.length; i++) {
+        for (let i = 0; i < showHistory.length; i++) {
             (function() {
+                searchBtn.textContent = showHistory[i];
+
                 searchBtn.addEventListener("click", function() {
                     getCityInfoByName(searchBtn.innerText);
                 })
             })
         }
     }
-}
+// }
 // This will function will search for information 
 var searchHandler = function (event) {
     event.preventDefault();
+    console.log(">>>Hi<<<")
+    var searchedCities = enterCity.value;
+    if (searchedCities) {
+        pullUrlName(searchedCities);
+        enterCity.value = searchedCities;
+        localStorage.setItem("city", JSON.stringify(showHistory));
+    } else {
+        alert("No Info")
+    }
 }
 
-var retrieveWeather = function (weatherApiData, searchTerm)) {
-    if (weatherApiData.length === 0) {
+// This function will access API within the search button function to obtain a city with lats/lons
+var pullUrlName = function (city) {
+    var cityGetUrl = callGeoWeatherUrl + city + '&appid=' + APIKey;
+    fetch(cityGetUrl)
+    .then(function(response) {
+        if (response.ok) {
+            response.json().then(function(data) {
+            retrieveWeather(data, city);
+            });
+        } else {
 
+        }
+    })
+    .catch(function (error) {
+        console.log("No Info Found");
+    });
+};
+
+// This will show no data found in two divs located in HTML. Also, it connects the city name API to lat and lon
+var retrieveWeather = function (weatherApiData, searchTerm) {
+    if (weatherApiData.length === 0) {
+        currentWeatherEL.textContent = "No data found";
+        return;
     }
-var requestWeatherUrl = callWeatherUrl + "lat=" + lat + "&lon" + lon + "&appid=" + APIKey + "&units=imperial";
+    var lat = weatherApiData[0].lat
+    var lon = weatherApiData[0].lon
+    var requestWeatherUrl = callWeatherUrl + "lat=" + lat + "&lon" + lon + "&appid=" + APIKey + "&units=imperial";
 
 fetch(requestWeatherUrl)
 .then(function(response) {
@@ -49,7 +84,16 @@ fetch(requestWeatherUrl)
 })
 .then(function (data) {
     console.log(data);
+    // This will clear out your previous search entries
     currentWeatherEL.innerHTML = "";
+
+        // Shows current name for city in city info section
+        var cityName = searchTerm;
+        console.log(cityName);
+        var showCityName = document.createElement("h2");
+        showCityName.classList.add("additive");
+        currentWeatherEL.appendChild(showCityName);
+        showCityName.textContext = "Today's Weather for " + cityName;
 
     var temp = data.current.temp;
     var showTemp = document.createElement("p")
@@ -71,14 +115,30 @@ fetch(requestWeatherUrl)
     );
     currentWeatherEL.setAttribute("class", "main")
   })
-    // Shows current name for city in city info section
-    var cityName = searchTerm;
-    console.log(cityName);
-    var showCityName = document.createElement("h2");
-    showCityName.classList.add("additive");
-    currentWeatherEL.appendChild(showCityName);
-    showCityName.textContext = "Today's Weather for " + cityName;
+  .catch(function(error){
+    console.log(error);
+  });
+};
 
+
+
+    var retrieveWeather = function (weatherApiData, searchTerm) {
+        if (weatherApiData.length === 0) {
+            forecastEL.textContent = "No data found";
+            return;
+        }
+        var lat = weatherApiData[0].lat
+        var lon = weatherApiData[0].lon
+        var requestWeatherUrl = callWeatherUrl + "lat=" + lat + "&lon" + lon + "&appid=" + APIKey + "&units=imperial";
+    
+    fetch(requestWeatherUrl)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function (data) {
+        console.log(data);
+        // This will clear out your previous search entries
+       forecastEL.innerHTML = "";
 
 
     // var card = document.createElement("div");

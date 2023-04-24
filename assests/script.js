@@ -1,8 +1,8 @@
 var APIKey = "b8a758dfd137c5b5b06017d7a3604538";
 var callWeatherUrl= "https://api.openweathermap.org/data/2.5/onecall?";
-var callGeoWeatherUrl = "http://api.openweathermap.org/geo/1.0/direct?qu";
+var callGeoWeatherUrl = "http://api.openweathermap.org/geo/1.0/direct?q=";
 var containerEL = document.querySelector(".container")
-containerEL.classList.add("row");
+// containerEL.classList.add("row");
 var enterCity = document.querySelector("#searchCity");
 var searchBtn = document.querySelector("#searchButton");
 var cityDisplayEL = document.querySelector("#city-display-info");
@@ -10,7 +10,7 @@ var currentWeatherEL = document.querySelector("#current-display-info");
 var forecastEL = document.querySelector("#forecast-blocks");
 
 
-// Array to use in local storage
+//
 var showHistory = enterCity.value;
 
 // adding event listener to local storage button
@@ -19,7 +19,7 @@ var city = localStorage.getItem("city")
     if (city) {
         showHistory = JSON.parse(city);
         console.log(showHistory);
-        searchBtn.innerHTML = '';
+        // searchBtn.innerHTML = '';
         for (let i = 0; i < showHistory.length; i++) {
             (function() {
                 searchBtn.textContent = showHistory[i];
@@ -47,8 +47,8 @@ var searchHandler = function (event) {
 
 // This function will access API within the search button function to obtain a city with lats/lons
 var pullUrlName = function (city) {
-    var cityGetUrl = callGeoWeatherUrl + city + '&appid=' + APIKey;
-    fetch(cityGetUrl)
+    var url = callGeoWeatherUrl + city + '&appid=' + APIKey;
+    fetch(url)
     .then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
@@ -72,7 +72,8 @@ var retrieveWeather = function (weatherApiData, searchTerm) {
     }
     var lat = weatherApiData[0].lat
     var lon = weatherApiData[0].lon
-    var requestWeatherUrl = callWeatherUrl + "lat=" + lat + "&lon" + lon + "&appid=" + APIKey + "&units=imperial";
+    console.log(lat, lon)
+    var requestWeatherUrl = callWeatherUrl + "lat=" + lat + "&lon=" + lon + "&appid=" + APIKey + "&units=imperial";
 
 fetch(requestWeatherUrl)
 .then(function(response) {
@@ -88,7 +89,7 @@ fetch(requestWeatherUrl)
         var cityName = searchTerm;
         console.log(cityName);
         var showCityName = document.createElement("h2");
-        showCityName.classList.add("additive");
+        showCityName.classList.add("test");
         forecastEL.appendChild(showCityName);
         showCityName.textContext = "Today's Weather for " + cityName;
 

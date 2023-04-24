@@ -9,12 +9,6 @@ span .h1 {
     text-align: center;
 }
 
-.container {
-display: flex;
-flex-wrap: wrap;
-
-}
-
 input {
     margin-top: 1rem;
 
@@ -44,14 +38,10 @@ button {
     bottom: 4rem;
     left: 2rem;
  }
-.col-9 {
-    width: 100%;
-    text-align: center;
-}
 
 .city-name {
-    position: relative;
-    bottom: 10rem;
+    /* position: relative;
+    bottom: 7rem; */
 }
 
 .forecastDisplay {

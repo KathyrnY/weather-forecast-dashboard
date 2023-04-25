@@ -2,12 +2,16 @@ var APIKey = "b8a758dfd137c5b5b06017d7a3604538";
 var callWeatherUrl= "https://api.openweathermap.org/data/3.0/onecall?";
 var callGeoWeatherUrl = "http://api.openweathermap.org/geo/1.0/direct?q=";
 var containerEL = document.querySelector(".container")
-// containerEL.classList.add("row");
 var enterCity = document.querySelector("#searchCity");
 var searchBtn = document.querySelector("#searchButton");
 var cityDisplayEL = document.querySelector("#city-display-info");
+var cityNameEl = document.querySelector("#city-name");
 var currentWeatherEL = document.querySelector("#current-display-info");
 var forecastEL = document.querySelector("#forecast-blocks");
+var asideEl = document.querySelector("aside");
+var displayCityName = document.createElement("div");
+asideEl.appendChild(displayCityName);
+var searchHistoryEl = document.querySelector("#search-history");
 
 
 //
@@ -15,41 +19,48 @@ var showHistory = [];
 
 
 // adding event listener to local storage button
-// var cityButton = function() {
-var city = localStorage.getItem("city")
-    if (city) {
-        showHistory = JSON.parse(city);
-        console.log(showHistory);
-        // searchBtn.innerHTML = '';
-        for (let i = 0; i < showHistory.length; i++) {
-            let cityName = showHistory[i];
-            let cityButton = document.createElement("button");
-            cityButton.textContent = cityName;
-            cityButton.addEventListener("click", function() {
-                getCityInfoByName(cityName);
-            });
-            searchBtn.appendChild(cityButton);
+// Modified code with help from tutor David Eutilo 
+var cityHistory = function() {
+    var city = localStorage.getItem("city")
+        if (city) {
+            showHistory = JSON.parse(city);
+            console.log(showHistory);
+            searchHistoryEl.innerHTML = "";
+            // displayCityName.innerHTML = "";
+            for (let i = 0; i < showHistory.length; i++) {
+                var cityName = showHistory[i];
+                var cityButton = document.createElement("button");
+                cityButton.textContent = cityName;
+                cityButton.classList.add("btn", "btn-primary", "col-12", "my-2");
+                cityButton.dataset.city = cityName;
+                cityButton.addEventListener("click", function(e) {
+                    var cityPull = e.target.dataset.city;
+                    pullUrlName(cityPull);
+                });
+                searchHistoryEl.appendChild(cityButton);
+            }
         }
     }
-// }
 // This will function will search for information 
+// Modified code with help from tutor David Eutilo
 var searchHandler = function (event) {
     event.preventDefault();
     console.log(">>>Hi<<<")
     var searchedCities = enterCity.value;
     if (searchedCities) {
-        pullUrlName(searchedCities);
-        enterCity.value = searchedCities;
-        // showHistory.push(searchedCities);
-        console.log(searchedCities);
+        var showHistory = JSON.parse(localStorage.getItem("city")) || [];
+        showHistory.push(searchedCities);
         localStorage.setItem("city", JSON.stringify(showHistory));
-        let cityName = searchedCities;
-        let cityButton = document.createElement("button");
+        var cityName = searchedCities;
+        var cityButton = document.createElement("button");
         cityButton.textContent = cityName;
+        cityButton.classList.add("btn", "btn-primary", "col-12", "my-2");
+        pullUrlName(cityName)
         cityButton.addEventListener("click", function() {
-            getCityInfoByName(cityName);
+            pullUrlName(cityName);
         });
-        searchBtn.appendChild(cityButton); //This is storing the showHistory array in local storage
+        // searchBtn.appendChild(cityButton); //This is storing the showHistory array in local storage
+        cityHistory();
     } else {
         alert("No Info")
     }
@@ -98,13 +109,11 @@ fetch(requestWeatherUrl)
         // Shows current name for city in city info section
         var cityName = searchTerm;
         console.log(cityName);
-        var showCityName = document.createElement("h2");
-        showCityName.textContext = "Today's Weather for " + cityName;
-        cityDisplayEL.appendChild(showCityName);
-
-    var retrieveDate = new Date(data.dt * 1000).toLocaleDateString("en-US");
-    var retrieveDateEl = document.createElement("p");
-    retrieveDateEl.textContent = retrieveDate;
+        cityNameEl.textContent = "Today's Weather for " + cityName;
+        
+        var currentDate = new Date();
+        var retrieveDateEl = document.createElement("p");
+        retrieveDateEl.textContent = currentDate.toLocaleDateString();
 
     var temp = data.current.temp;
     var showTemp = document.createElement("p")
@@ -123,13 +132,13 @@ fetch(requestWeatherUrl)
     iconImg.src = "https://openweathermap.org/img/wn/" + icon + ".png";
     
     currentWeatherEL.append(
-        showTemp, showWind, showHumidity, iconImg
+        retrieveDateEl, iconImg, showTemp, showWind, showHumidity
     );
-    // Modified code with help from TA Daniel
+    // Modified code with help from TA Daniel and tutor David Eutilo
     currentWeatherEL.setAttribute("class", "main")
         for (let i = 0; i < 5; i++) {
-            var date = moment(new Date());
-             var dtUnixFormatting = date.format("DD MM YYYY")//.format(data.daily[i].dt).format('MMMM Do, YYYY');
+            var date = moment.unix(data.daily[i].dt);
+             var dtUnixFormatting = date.format("ddd MMM D")//.format(data.daily[i].dt).format('MMMM Do, YYYY');
             var tempBlock = data.daily[i].temp.day;
             var windBlock = data.daily[i].wind_speed;
             var humidityBlock = data.daily[i].humidity;
@@ -143,7 +152,7 @@ fetch(requestWeatherUrl)
             var currentDate = document.createElement("h4");
             forecastCard.appendChild(currentDate);
             var iconImgEl = document.createElement("img");
-            iconSrc = 'https://openweathermap.org/img/wn/' + weatherIcon + '.png';
+            iconImgEl.src = 'https://openweathermap.org/img/wn/' + weatherIcon + '.png';
             forecastCard.appendChild(iconImgEl);
             var tempData = document.createElement("p");
             forecastCard.appendChild(tempData);
@@ -174,4 +183,5 @@ fetch(requestWeatherUrl)
 };
 
 searchBtn.addEventListener("click", searchHandler);
+cityHistory();
 

@@ -1,5 +1,5 @@
 var APIKey = "b8a758dfd137c5b5b06017d7a3604538";
-var callWeatherUrl= "https://api.openweathermap.org/data/2.5/onecall?";
+var callWeatherUrl= "https://api.openweathermap.org/data/3.0/onecall?";
 var callGeoWeatherUrl = "http://api.openweathermap.org/geo/1.0/direct?q=";
 var containerEL = document.querySelector(".container")
 // containerEL.classList.add("row");
@@ -11,7 +11,8 @@ var forecastEL = document.querySelector("#forecast-blocks");
 
 
 //
-var showHistory = enterCity.value;
+var showHistory = [];
+
 
 // adding event listener to local storage button
 // var cityButton = function() {
@@ -21,13 +22,13 @@ var city = localStorage.getItem("city")
         console.log(showHistory);
         // searchBtn.innerHTML = '';
         for (let i = 0; i < showHistory.length; i++) {
-            (function() {
-                searchBtn.textContent = showHistory[i];
-
-                searchBtn.addEventListener("click", function() {
-                    getCityInfoByName(searchBtn.innerText);
-                })
-            })
+            let cityName = showHistory[i];
+            let cityButton = document.createElement("button");
+            cityButton.textContent = cityName;
+            cityButton.addEventListener("click", function() {
+                getCityInfoByName(cityName);
+            });
+            searchBtn.appendChild(cityButton);
         }
     }
 // }
@@ -39,7 +40,16 @@ var searchHandler = function (event) {
     if (searchedCities) {
         pullUrlName(searchedCities);
         enterCity.value = searchedCities;
+        // showHistory.push(searchedCities);
+        console.log(searchedCities);
         localStorage.setItem("city", JSON.stringify(showHistory));
+        let cityName = searchedCities;
+        let cityButton = document.createElement("button");
+        cityButton.textContent = cityName;
+        cityButton.addEventListener("click", function() {
+            getCityInfoByName(cityName);
+        });
+        searchBtn.appendChild(cityButton); //This is storing the showHistory array in local storage
     } else {
         alert("No Info")
     }
@@ -89,9 +99,8 @@ fetch(requestWeatherUrl)
         var cityName = searchTerm;
         console.log(cityName);
         var showCityName = document.createElement("h2");
-        showCityName.classList.add("test");
-        forecastEL.appendChild(showCityName);
         showCityName.textContext = "Today's Weather for " + cityName;
+        cityDisplayEL.appendChild(showCityName);
 
     var retrieveDate = new Date(data.dt * 1000).toLocaleDateString("en-US");
     var retrieveDateEl = document.createElement("p");
@@ -116,10 +125,12 @@ fetch(requestWeatherUrl)
     currentWeatherEL.append(
         showTemp, showWind, showHumidity, iconImg
     );
+    // Modified code with help from TA Daniel
     currentWeatherEL.setAttribute("class", "main")
         for (let i = 0; i < 5; i++) {
-            var dtUnixFormatting = moment.unix(data.daily[i].dt).format('MMMM Do, YYYY');
-            var tempBlock = data.daily[i].temp;
+            var date = moment(new Date());
+             var dtUnixFormatting = date.format("DD MM YYYY")//.format(data.daily[i].dt).format('MMMM Do, YYYY');
+            var tempBlock = data.daily[i].temp.day;
             var windBlock = data.daily[i].wind_speed;
             var humidityBlock = data.daily[i].humidity;
             var weatherIcon = data.daily[i].weather[0].icon;
@@ -141,7 +152,7 @@ fetch(requestWeatherUrl)
             var humidityData = document.createElement("p");
             forecastCard.appendChild(humidityData);
 
-             forecastEL.appendChild(card);
+             forecastEL.appendChild(forecastCard);
         
             currentDate.textContent = dtUnixFormatting;
             tempData.textContent = "Temp: " + tempBlock + "°F";

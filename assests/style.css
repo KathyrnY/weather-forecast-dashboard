@@ -5,8 +5,9 @@ body {
     text-align: center;
 }
 
-span .h1 {
-    text-align: center;
+.navbar {
+    display: flex;
+    justify-content: center;
 }
 
 input {
@@ -33,19 +34,7 @@ button {
     margin-top: 2rem;
  }
 
- section {
-    position: relative;
-    bottom: 4rem;
-    left: 2rem;
- }
-
-.city-name {
-    /* position: relative;
-    top: 2rem; */
-}
-
-.forecastDisplay {
-    position: relative;
-    bottom: 1rem;
-    left: 15px;
+/* TA Sean helped with modifying CSS to style page correctly */
+.five-day-forecast-card {
+    display: flex;
 }

@@ -26,7 +26,6 @@ var cityHistory = function() {
             showHistory = JSON.parse(city);
             console.log(showHistory);
             searchHistoryEl.innerHTML = "";
-            // displayCityName.innerHTML = "";
             for (let i = 0; i < showHistory.length; i++) {
                 var cityName = showHistory[i];
                 var cityButton = document.createElement("button");
@@ -59,7 +58,7 @@ var searchHandler = function (event) {
         cityButton.addEventListener("click", function() {
             pullUrlName(cityName);
         });
-        // searchBtn.appendChild(cityButton); //This is storing the showHistory array in local storage
+
         cityHistory();
     } else {
         alert("No Info")
@@ -79,7 +78,7 @@ var pullUrlName = function (city) {
 
         }
     })
-    .catch(function (error) {
+    .catch(function () {
         console.log("No Info Found");
     });
 };
@@ -111,9 +110,10 @@ fetch(requestWeatherUrl)
         console.log(cityName);
         cityNameEl.textContent = "Today's Weather for " + cityName;
         
-        var currentDate = new Date();
-        var retrieveDateEl = document.createElement("p");
-        retrieveDateEl.textContent = currentDate.toLocaleDateString();
+        var currentDate = moment().format("ddd MMM D");
+        var retrieveDateEl = document.createElement('p');
+        retrieveDateEl.textContent = currentDate;
+        document.body.appendChild(retrieveDateEl);
 
     var temp = data.current.temp;
     var showTemp = document.createElement("p")
@@ -138,12 +138,11 @@ fetch(requestWeatherUrl)
     currentWeatherEL.setAttribute("class", "main")
         for (let i = 0; i < 5; i++) {
             var date = moment.unix(data.daily[i].dt);
-             var dtUnixFormatting = date.format("ddd MMM D")//.format(data.daily[i].dt).format('MMMM Do, YYYY');
+             var dtUnixFormatting = date.format("ddd MMM D");
             var tempBlock = data.daily[i].temp.day;
             var windBlock = data.daily[i].wind_speed;
             var humidityBlock = data.daily[i].humidity;
             var weatherIcon = data.daily[i].weather[0].icon;
-            // var weatherDescription = data.daily[i].weather[0].description
             
 
             var forecastCard = document.createElement("div");

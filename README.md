@@ -6,7 +6,8 @@ Created a weather dashboard to utilize a 3rd party API called [OpenWeather](#htt
 
 ## Visual 
 
-[screencapture-127-0-0-1-5500-weather-forecast-dashboard-index-html-2023-04-26-22_19_33-compressed.pdf]
+![screencapture-127-0-0-1-5500-weather-forecast-dashboard-index-html-2023-04-26-22_19_33](https://user-images.githubusercontent.com/127566404/234744417-968a71df-e480-4365-8ebe-0019f85b1e50.png)
+
 
 ## Link
 

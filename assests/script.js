@@ -1,6 +1,6 @@
 var APIKey = "b8a758dfd137c5b5b06017d7a3604538";
 var callWeatherUrl= "https://api.openweathermap.org/data/3.0/onecall?";
-var callGeoWeatherUrl = "http://api.openweathermap.org/geo/1.0/direct?q=";
+var callGeoWeatherUrl = "https://api.openweathermap.org/geo/1.0/direct?q=";
 var containerEL = document.querySelector(".container")
 var enterCity = document.querySelector("#searchCity");
 var searchBtn = document.querySelector("#searchButton");
